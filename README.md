@@ -17,4 +17,4 @@ The CD uses a floppy disc image for the initial boot process, which can be mount
 
 ---
 
-The Cobalt distribution (everything in this repository) is licensed under the GNU General Public License v3, but Cobalt contains binaries from the [FreeDOS Project](https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/pkg-html/index.html0) that may be under different licenses.
+The Cobalt distribution (everything in this repository) is licensed under the GNU General Public License v3, but Cobalt contains binaries from the [FreeDOS Project](https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/pkg-html/index.html) that may be under different licenses.
