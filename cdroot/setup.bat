@@ -1,5 +1,8 @@
 @echo off
 echo.
+echo  Cobalt OS
+type date.txt
+echo.
 echo  Cobalt is still in development, so you might encounter bugs. Please report
 echo  bugs to https://github.com/corbindavenport/cobalt/issues.
 echo.
