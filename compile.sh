@@ -8,8 +8,8 @@ if ! [ -x "$(command -v mkisofs)" ]; then
   exit
 fi
 
-mkdir -p "$PWD/bin"
+mkdir -p "$PWD/dist"
 echo "Generating ISO..."
-mkisofs -o "$PWD/bin/cobalt.iso" -publisher "$PUBLISHER" -V "$TITLE" -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -c boot.cat cdroot
+mkisofs -o "$PWD/dist/cobalt.iso" -publisher "$PUBLISHER" -V "$TITLE" -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -c boot.cat cdroot
 
 exit 0
