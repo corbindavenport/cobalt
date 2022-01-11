@@ -2,6 +2,8 @@
 
 Cobalt is an operating system based on FreeDOS and the [older Cobalt OS](https://github.com/Cobalt-OS/Cobalt) project. It's still very early in development.
 
+**[Join Discord server](https://discord.gg/59wfy5cNHw)**
+
 ### Building and testing Cobalt
 
 Clone the repository, then run the compile script. You need `mkisofs` installed and a Linux host.
