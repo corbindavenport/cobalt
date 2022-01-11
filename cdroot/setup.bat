@@ -15,7 +15,7 @@ goto drivescan
 
 :drivescan
 fdisk /info | grep "FAT" > nul
-if not errorlevel 1 goto fatfs
+if not errorlevel 1 goto driveselect
 goto invalid
 
 :invalid
@@ -27,14 +27,39 @@ echo  Press Y to open FDISK to create a partition, or N to cancel.
 echo.
 choice
 if errorlevel 2 goto cancel
-if not errorlevel 2 fdisk
+if not errorlevel 2 driveselect
 goto
 
-:fatfs
+:driveselect
 cls
+fdisk /info
 echo.
-echo  Found a FAT file system.
+echo -------------------------------------------------------------------------------
+echo.
+echo  Type the drive letter to be used for the Cobalt installation (such as 'C'),
+echo  then press ENTER on your keyboard.
+echo.
+echo  NOTE: The target drive/partition will be formatted. ALL DATA WILL BE ERASED.
+echo.
+set /p drive=
+echo.
+echo %drive% | grep -e "B\|C\|D\|E\|F\|G\|H\|I\|J\|K\|L\|M\|N\|O\|P\|Q\|R\|S\|T\|U\|V\|W\|X\|Y\|Z" > nul
+if not errorlevel 0 goto formaterror
+goto format
+
+:format
+cls
+format %drive%: /V:Cobalt /S /A
+if not errorlevel 0 goto formaterror
+sys a: %drive%:
+if not errorlevel 0 goto formaterror
 goto end
+
+:formaterror
+echo.
+echo  There was an error. Press any key to select a drive and try again.
+pause >nul
+goto driveselect
 
 :cancel
 cls
