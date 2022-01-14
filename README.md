@@ -1,22 +1,24 @@
 # Cobalt
 
-Cobalt is an operating system based on FreeDOS and the [older Cobalt OS](https://github.com/Cobalt-OS/Cobalt) project. It's still very early in development.
+![Cobalt setup screen and startup](https://i.imgur.com/a4j7tB8.png)
 
-**[Join Discord server](https://discord.gg/59wfy5cNHw)**
+Cobalt is a lightweight operating system based on [FreeDOS](https://freedos.org/), which aims to make DOS more accessible and easier to use on modern hardware and virtual machines.
 
-### Building and testing Cobalt
+Cobalt is still very early in development, and isn't much more than FreeDOS with a custom installer at this point.
 
-Clone the repository, then run the compile script. You need `mkisofs` installed and a Linux host.
-```
-./compile.sh
-```
-This will generate a bootable ISO image at `dist/cobalt.iso`. This can be written to a physical CD/USB or used with a virtual machine.
+### Features
 
-The CD uses a floppy disc image for the initial boot process, which can be mounted for editing with the `mount-floppy` script.
-```
-./mount-floppy.sh
-```
+- FreeDOS 1.1 kernel
+- 100% compatibility with DOS applications and games
+- Bootable CD with easy-to-use installer
+
+See the [GitHub issues list](https://github.com/corbindavenport/cobalt/issues) for planned features. There is no 
 
 ---
 
-The Cobalt distribution (everything non-compiled in this repository) is licensed under the GNU General Public License v3, but Cobalt contains binaries from the [FreeDOS Project](https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/pkg-html/index.html) that may be under different source licenses.
+**[Download Nightly build](https://github.com/corbindavenport/cobalt/releases/tag/nightly)** | **[Discussion Board](https://github.com/corbindavenport/cobalt/discussions)** | **[Join Discord](https://discord.gg/59wfy5cNHw)**
+
+
+---
+
+The Cobalt distribution is licensed under the GNU General Public License v3, but Cobalt also contains binaries from the [FreeDOS Project](https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/pkg-html/index.html) that may be under different source licenses.
