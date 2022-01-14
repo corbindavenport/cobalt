@@ -1,0 +1,32 @@
+
+name: Build Nightly
+on:
+  schedule:
+    - cron: '0 2 * * *' # run at 2 AM UTC
+  workflow_dispatch:
+
+jobs:
+  nightly:
+    name: Deploy nightly
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out repository
+      - uses: actions/checkout@v2
+      # Build Cobalt
+      - name: Build ISO
+        run: |
+          sudo apt-get update
+          sudo apt install mkisofs -y
+          ./compile.sh
+      # Publish release
+      - name: Deploy release
+        uses: WebFreak001/deploy-nightly@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # automatically provided by github actions
+        with:
+          upload_url: https://uploads.github.com/repos/corbindavenport/cobalt/releases/57153618/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
+          release_id: 57153618 # same as above (id can just be taken out the upload_url, it's used to find old releases)
+          asset_path: dist/cobalt.iso # path to archive to upload
+          asset_name: cobalt-nightly-$$.zip # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
+          asset_content_type: application/x-iso9660-image # required by GitHub API
+          max_releases: 3 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
