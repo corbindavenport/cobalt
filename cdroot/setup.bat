@@ -1,4 +1,6 @@
 @echo off
+PATH tools
+
 echo.
 echo.
 echo.

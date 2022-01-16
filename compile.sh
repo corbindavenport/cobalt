@@ -1,7 +1,10 @@
 #!/bin/bash
 
+DIR="$(pwd "${BASH_SOURCE[0]}")"
 PUBLISHER="Cobalt"
 TITLE="Cobalt Live CD"
+
+cd "$DIR"
 
 # Check for mkisofs
 
@@ -10,19 +13,26 @@ if ! [ -x "$(command -v mkisofs)" ]; then
   exit
 fi
 
-mkdir -p "$PWD/dist"
+mkdir -p "$DIR/dist"
 
 # Save build date to CD
 
 DATE="$(date)"
 STR+=" Build Date: $DATE"
-echo "$STR" > "$PWD/cdroot/date.txt"
+echo "$STR" > "$DIR/cdroot/date.txt"
+
+# Generate ZIP file for installer
+
+cd "$DIR/sysroot"
+zip "$DIR/cdroot/system.zip" * -x *.md
+cd "$DIR"
 
 # Generate ISO
 
-mkdir -p "$PWD/dist"
+mkdir -p "$DIR/dist"
 echo "Generating ISO..."
-mkisofs -o "$PWD/dist/cobalt.iso" -publisher "$PUBLISHER" -V "$TITLE" -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -c boot.cat cdroot
+mkisofs -o "$DIR/dist/cobalt.iso" -publisher "$PUBLISHER" -V "$TITLE" -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -c boot.cat cdroot
 
 # Clean up
-rm "$PWD/cdroot/date.txt"
+rm "$DIR/cdroot/date.txt"
+rm "$DIR/cdroot/system.zip"
