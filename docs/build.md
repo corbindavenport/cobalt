@@ -1,4 +1,4 @@
-### Building and testing Cobalt
+# Building and testing Cobalt
 
 Clone the repository, then run the compile script. You need `mkisofs` installed and a Linux host.
 ```
