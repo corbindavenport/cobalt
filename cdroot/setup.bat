@@ -87,9 +87,15 @@ goto format
 
 :format
 cls
+echo "Formatting drive..."
 format %installdrive%: /V:Cobalt /A /z:seriously
 if not errorlevel 0 goto formaterror
+echo "Copying DOS system files..."
 sys A: %installdrive%:
+if not errorlevel 0 goto formaterror
+echo "Copying Cobalt files..."
+cwsdpmi
+p7zip x system.zip -o%installdrive%:
 if not errorlevel 0 goto formaterror
 goto completed
 
