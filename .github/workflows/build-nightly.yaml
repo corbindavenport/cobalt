@@ -16,7 +16,7 @@ jobs:
       - name: Build ISO
         run: |
           sudo apt-get update
-          sudo apt install mkisofs -y
+          sudo apt install mkisofs jq -y
           ./compile.sh
       # Publish release
       - name: Deploy release
