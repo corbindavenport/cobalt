@@ -24,15 +24,26 @@ mkdir -p "$DIR/dist"
 # Download packages
 # This is disabled for now, add a '!' after 'if' to test
 
-if [ -d "$DIR/tmp" ]; then
+if ! [ -d "$DIR/tmp" ]; then
   mkdir -p "$DIR/tmp"
   while IFS="" read -r p || [ -n "$p" ]; do
     # Split package name
     IFS="/" 
     read -a PACKAGE <<< "$p"
+    # Download
     echo "Downloading package: $p"
     curl --progress-bar -o "$DIR/tmp/${PACKAGE[1]}.zip" "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/latest/$p.zip"
+    # Create single BIN folder from all zip files
+    unzip -o "$DIR/tmp/${PACKAGE[1]}.zip" "BIN/*" "bin/*" -x "*/_*" "*/*.HLP" -d "$DIR/tmp/"
+    # Create source folder
+    unzip -o "$DIR/tmp/${PACKAGE[1]}.zip" "SOURCE/*" "source/*" -x "*/_*" -d "$DIR/tmp/"
   done < "$DIR/packages.txt"
+  # Zip up combined source folder and move it to the CD
+  cd "$DIR/tmp/SOURCE"
+  zip -r "$DIR/cdroot/source.zip" *
+  cd "$DIR"
+  # Move binaries to system folder
+  mv -f "$DIR/tmp/BIN" "$DIR/sysroot/system/bin"
 fi
 
 # Save build date to CD
@@ -44,7 +55,7 @@ echo "$STR" > "$DIR/cdroot/date.txt"
 # Generate ZIP file for installer
 
 cd "$DIR/sysroot"
-zip "$DIR/cdroot/system.zip" * -x *.md
+zip -r "$DIR/cdroot/system.zip" * -x *.md
 cd "$DIR"
 
 # Generate ISO
