@@ -14,7 +14,7 @@ base/fdisk
 base/fdxms
 base/find
 base/format
-base/jemm386
+base/jemm
 base/keyb
 base/keyb_lay
 base/label
@@ -25,3 +25,5 @@ base/shsucdx
 base/undelete
 base/unformat
 base/xcopy
+base/edit
+drivers/udvd2
