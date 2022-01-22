@@ -2,3 +2,4 @@ dist/*
 tmp/*
 cdroot/source.zip
 sysroot/system/BIN/*
+sysroot/system/bin/*
