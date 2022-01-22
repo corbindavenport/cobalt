@@ -43,7 +43,7 @@ if ! [ -d "$DIR/tmp" ]; then
   zip -r "$DIR/cdroot/source.zip" *
   cd "$DIR"
   # Move binaries to system folder
-  cp -f -r "$DIR/tmp/BIN" "$DIR/sysroot/system/bin"
+  cp -f -r "$DIR/tmp/BIN" "$DIR/sysroot/system/"
 fi
 
 # Save build date to CD
