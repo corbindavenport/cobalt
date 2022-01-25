@@ -26,7 +26,6 @@ mkdir -p "$DIR/dist"
 
 if ! [ -d "$DIR/tmp" ]; then
   mkdir -p "$DIR/tmp"
-  mkdir -p "$DIR/sysroot/system/bin"
   while IFS="" read -r p || [ -n "$p" ]; do
     # Split package name
     IFS="/" 
@@ -44,7 +43,8 @@ if ! [ -d "$DIR/tmp" ]; then
   zip -r "$DIR/cdroot/source.zip" *
   cd "$DIR"
   # Move binaries to system folder
-  cp -f -r "$DIR/tmp/BIN/*" "$DIR/sysroot/system/bin/"
+  mkdir -p "$DIR/sysroot/system/bin"
+  cp -f -r "tmp/BIN/*" "sysroot/system/bin/"
 fi
 
 # Save build date to CD
