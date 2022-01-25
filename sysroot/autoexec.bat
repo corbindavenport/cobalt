@@ -1,4 +1,4 @@
-@echo off
+@ECHO OFF
 lh \system\bin\ctmouse.exe
 lh \system\bin\shsucdx.com /d:cd
 path \system\bin
