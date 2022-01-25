@@ -7,8 +7,9 @@ Cobalt is still very early in development, and isn't much more than FreeDOS with
 ### Features
 
 - FreeDOS 1.1 kernel
-- 100% compatibility with DOS applications and games
+- Full compatibility with DOS applications and games
 - Bootable CD with easy-to-use installer
+- Weekly builds with latest packages from FreeDOS repositories
 
 See the [GitHub issues list](https://github.com/corbindavenport/cobalt/issues) for planned features. There is no finished release yet, but you can download a nightly build to try it in a virtual machine (or burn it to a CD).
 
