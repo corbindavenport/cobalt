@@ -26,3 +26,4 @@ base/unformat
 base/xcopy
 base/edit
 drivers/udvd2
+apps/dn2

@@ -17,7 +17,7 @@ function get_dependencies {
     echo "Downloading package: $p"
     curl --progress-bar -A "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0" -o "$DIR/tmp/${PACKAGE[1]}.zip" "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/latest/$p.zip"
     # Create single BIN folder from all zip files
-    unzip -o "$DIR/tmp/${PACKAGE[1]}.zip" "BIN/*" "bin/*" -x "*/_*" "*/*.HLP" -d "$DIR/tmp/"
+    unzip -o "$DIR/tmp/${PACKAGE[1]}.zip" "BIN/*" "bin/*" "APPS/*" "apps/*" -x "*/_*" "*/*.HLP" -d "$DIR/tmp/"
     # Create source folder
     unzip -o "$DIR/tmp/${PACKAGE[1]}.zip" "SOURCE/*" "source/*" -x "*/_*" -d "$DIR/tmp/"
   done < "$DIR/packages.txt"
@@ -28,6 +28,9 @@ function get_dependencies {
   # Move binaries to system folder
   mkdir -p "$DIR/sysroot/system/bin"
   cp -f -r tmp/BIN/* sysroot/system/bin
+  if [ -d "$DIR/tmp/APPS" ]; then
+    cp -f -r tmp/APPS/* sysroot/system/bin
+  fi
 }
 
 DIR="$(pwd "${BASH_SOURCE[0]}")"
