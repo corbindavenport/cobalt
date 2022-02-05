@@ -47,6 +47,11 @@ if ! [ -x "$(command -v mkisofs)" ]; then
   exit
 fi
 
+if ! [ -x "$(command -v isohybrid)" ]; then
+  echo "Install isohybrid (syslinux-utils) and run this script again."
+  exit
+fi
+
 if ! [ -x "$(command -v jq)" ]; then
   echo "Install jq and run this script again."
   echo "https://stedolan.github.io/jq/download/"
@@ -83,6 +88,7 @@ cd "$DIR"
 mkdir -p "$DIR/dist"
 echo "Generating ISO..."
 mkisofs -o "$DIR/dist/cobalt.iso" -publisher "$PUBLISHER" -V "$TITLE" -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -c boot.cat cdroot
+isohybrid "$DIR/dist/cobalt.iso"
 
 # Clean up
 rm "$DIR/cdroot/date.txt"

@@ -16,7 +16,7 @@ jobs:
       - name: Get dependencies
         run: |
           sudo apt-get update
-          sudo apt install -y mkisofs jq
+          sudo apt install -y mkisofs jq syslinux-utils
       # Build Cobalt
       - name: Build ISO
         run: ./compile.sh
