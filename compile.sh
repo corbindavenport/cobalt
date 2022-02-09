@@ -58,6 +58,16 @@ if ! [ -x "$(command -v jq)" ]; then
   exit
 fi
 
+if ! [ -x "$(command -v dosbox)" ]; then
+  echo "Install DOSBox and run this script again."
+  exit
+fi
+
+if ! [ -x "$(command -v bximage)" ]; then
+  echo "Install DOSBox and run this script again."
+  exit
+fi
+
 mkdir -p "$DIR/dist"
 
 # Download packages
@@ -83,6 +93,20 @@ cd "$DIR/sysroot"
 zip -r "$DIR/cdroot/system.zip" * -x *.md
 cd "$DIR"
 
+# Generate USB image
+rm -f "$DIR/dist/usb.img"
+rm -f "$DIR/tmp/dosbox.bat"
+DOSBOX_RUN="
+@ECHO OFF
+imgmount 2 C:\dist\usb.img -t hdd -size 512,63,16,20 -fs none
+echo exit
+"
+echo "$DOSBOX_RUN" > "$DIR/dosbox.bat"
+bximage -q -mode=create -hd=10M "$DIR/dist/usb.img" #TODO: Change size based on CDROOT folder
+#export SDL_VIDEODRIVER=dummy # Comment this out to see DOSBox result
+dosbox -noautoexec -conf "$DIR/tmp/dosbox.conf" "$DIR/dosbox.bat"
+# TODO Finish format process, running sys.com, and other steps: https://www.vogons.org/viewtopic.php?t=7260
+
 # Generate ISO
 
 mkdir -p "$DIR/dist"
@@ -90,6 +114,7 @@ echo "Generating ISO..."
 mkisofs -o "$DIR/dist/cobalt.iso" -publisher "$PUBLISHER" -V "$TITLE" -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -c boot.cat cdroot
 isohybrid "$DIR/dist/cobalt.iso"
 
-# Clean up
+# Clean up everything not in /tmp
 rm "$DIR/cdroot/date.txt"
 rm "$DIR/cdroot/system.zip"
+rm -f "$DIR/dosbox.bat"
