@@ -37,7 +37,7 @@ echo  Press Y to open FDISK to create a partition, or N to cancel.
 echo.
 choice
 if errorlevel 2 goto cancel
-if not errorlevel 2 driveselect
+if not errorlevel 2 goto driveselect
 goto
 
 :driveselect

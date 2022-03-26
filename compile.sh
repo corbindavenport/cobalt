@@ -52,9 +52,13 @@ if ! [ -x "$(command -v isohybrid)" ]; then
   exit
 fi
 
-if ! [ -x "$(command -v jq)" ]; then
-  echo "Install jq and run this script again."
-  echo "https://stedolan.github.io/jq/download/"
+if ! [ -x "$(command -v zip)" ]; then
+  echo "Install zip and run this script again."
+  exit
+fi
+
+if ! [ -x "$(command -v unzip)" ]; then
+  echo "Install unzip and run this script again."
   exit
 fi
 
