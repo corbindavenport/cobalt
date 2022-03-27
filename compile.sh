@@ -33,6 +33,38 @@ function get_dependencies {
   fi
 }
 
+function get_ms_sys {
+  git clone https://github.com/pbatard/ms-sys.git "$DIR/ms-sys"
+  cd "$DIR/ms-sys"
+  make
+}
+
+function generate_usb_image {
+  # TODO: Check if there is already /dev/loop1, and set size based on size of files (with min as 50MB)
+  echo "Generating USB image..."
+  rm -rf "$DIR/tmpmount"
+  rm -f "$DIR/dist/cobalt-usb.img"
+  dd if=/dev/zero of="$DIR/dist/cobalt-usb.img" iflag=fullblock bs=1M count=50 && sync
+  sudo losetup loop1 "$DIR/dist/cobalt-usb.img"
+  sudo parted /dev/loop1 --script -- mklabel msdos
+  sudo parted /dev/loop1 --script -- mkpart primary fat32 1MiB 100%
+  sudo mkfs.vfat -F 32 -n COBALT /dev/loop1p1
+  # Create boot record with ms-sys
+  sudo "$DIR/ms-sys/bin/ms-sys" -w -f /dev/loop1
+  sudo "$DIR/ms-sys/bin/ms-sys" --fat32free /dev/loop1p1
+  sudo "$DIR/ms-sys/bin/ms-sys" -p /dev/loop1p1
+  # Mount the partition
+  sudo mkdir -p "$DIR/tmpmount"
+  sudo mount -t vfat -o umask=0 /dev/loop1p1 "$DIR/tmpmount"
+  # Write files
+  cd "$DIR/cdroot/"
+  cp -r * "$DIR/tmpmount"
+  # Unmount partition and loopback device
+  sudo umount "$DIR/tmpmount"
+  rm -rf "$DIR/tmpmount"
+  sudo losetup -d /dev/loop1
+}
+
 DIR="$(pwd "${BASH_SOURCE[0]}")"
 PUBLISHER="Cobalt"
 TITLE="Cobalt Live CD"
@@ -40,31 +72,18 @@ PARAM=$1
 
 cd "$DIR"
 
-# Check for prerequisites
-
-if ! [ -x "$(command -v mkisofs)" ]; then
-  echo "Install mkisofs and run this script again."
-  exit
-fi
-
-if ! [ -x "$(command -v isohybrid)" ]; then
-  echo "Install isohybrid (syslinux-utils) and run this script again."
-  exit
-fi
-
-if ! [ -x "$(command -v zip)" ]; then
-  echo "Install zip and run this script again."
-  exit
-fi
-
-if ! [ -x "$(command -v unzip)" ]; then
-  echo "Install unzip and run this script again."
-  exit
-fi
+# Check for sudo
+sudo echo "Sudo access granted."
 
 mkdir -p "$DIR/dist"
 
-# Download packages
+# Download and compile ms-sys if needed
+if ! [ -d "$DIR/ms-sys/bin" ]; then
+  echo "MS-SYS is not available, downloading now..."
+  get_ms_sys
+fi
+
+# Download FreeDOS packages
 # This is disabled for now, add a '!' after 'if' to test
 
 if [ "$PARAM" == "--force-rebuild" ]; then
@@ -87,12 +106,18 @@ cd "$DIR/sysroot"
 zip -r "$DIR/cdroot/system.zip" * -x *.md
 cd "$DIR"
 
+# Create folder where ISO and USB image will be stored
+mkdir -p "$DIR/dist"
+
 # Generate ISO
 
-mkdir -p "$DIR/dist"
 echo "Generating ISO..."
 mkisofs -o "$DIR/dist/cobalt.iso" -publisher "$PUBLISHER" -V "$TITLE" -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -c boot.cat cdroot
-isohybrid "$DIR/dist/cobalt.iso"
+
+# Generate USB image
+generate_usb_image
+
+# Mount USB image and copy files
 
 # Clean up
 rm "$DIR/cdroot/date.txt"

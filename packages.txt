@@ -24,6 +24,7 @@ base/shsucdx
 base/undelete
 base/unformat
 base/xcopy
+base/kernel
 base/edit
 drivers/udvd2
 apps/dn2
