@@ -17,4 +17,4 @@ See the [GitHub issues list](https://github.com/corbindavenport/cobalt/issues) f
 
 ----
 
-The Cobalt distribution is licensed under the GNU General Public License v3, but Cobalt also contains binaries from the [FreeDOS Project](https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/pkg-html/index.html) that may be under different source licenses.
+The Cobalt distribution is licensed under the GNU General Public License v3, but Cobalt also contains binaries from the [FreeDOS Project](https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/pkg-html/index.html) that may be under different source licenses. If you would like to financially support Cobalt, please consider [donating to the FreeDOS Project](https://patreon.com/freedos), since nearly all the software included in Cobalt is developed and/or packaged by FreeDOS developers.
