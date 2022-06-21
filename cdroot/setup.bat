@@ -24,7 +24,7 @@ pause >nul
 goto drivescan
 
 :drivescan
-fdisk /info | grep "FAT" > nul
+fdisk /info 1 | grep "FAT" > nul
 if not errorlevel 1 goto driveselect
 goto invalid
 
@@ -33,16 +33,28 @@ cls
 echo.
 echo  The main drive is not formatted, or the disk format could not be detected.
 echo.
-echo  Press Y to open FDISK to create a partition, or N to cancel.
+echo  Press Y to format the drive, or N to cancel.
 echo.
 choice
 if errorlevel 2 goto cancel
-if not errorlevel 2 goto driveselect
-goto
+echo.
+echo Are you sure you want to format the drive? This cannot be undone.
+echo.
+choice
+if errorlevel 2 goto cancel
+:: Create a new primary DOS partition that takes up 100% of the drive, along with a Master Boot Record (MBR)
+fdisk /pri:100,100 /mbr 1
+echo.
+echo Drive has been formatted, the Cobalt installer must reboot to work.
+echo Press ENTER to restart the installer.
+echo.
+pause >nul
+fdisk /reboot
+goto cancel
 
 :driveselect
 cls
-fdisk /info
+fdisk /info 1
 echo.
 echo -------------------------------------------------------------------------------
 echo.
