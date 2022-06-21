@@ -1,5 +1,6 @@
 @echo off
 PATH tools
+:: Helpful documentation: https://ss64.com/nt/syntax-redirection.html
 
 echo.
 echo.
@@ -94,18 +95,19 @@ goto driveconfirm
 if %installdrive% == A goto invdrive
 echo.
 choice " Are you sure you want to use the %installdrive%: drive? "
-if not errorlevel 1 goto cancel
+if errorlevel 2 goto cancel
 goto format
 
 :format
 cls
-echo "Formatting drive..."
+echo Formatting drive...
+:: TODO: This error handling doesn't work
 format %installdrive%: /V:Cobalt /A /z:seriously
 if not errorlevel 0 goto formaterror
-echo "Copying DOS system files..."
+echo Copying DOS system files...
 sys A: %installdrive%:
 if not errorlevel 0 goto formaterror
-echo "Copying Cobalt files..."
+echo Copying Cobalt files...
 cwsdpmi
 p7zip x system.zip -o%installdrive%:
 if not errorlevel 0 goto formaterror
