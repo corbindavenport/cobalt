@@ -33,12 +33,6 @@ function get_dependencies {
   fi
 }
 
-function get_ms_sys {
-  git clone https://github.com/pbatard/ms-sys.git "$DIR/ms-sys"
-  cd "$DIR/ms-sys"
-  make
-}
-
 function generate_usb_image {
   # TODO: Check if there is already /dev/loop1, and set size based on size of files (with min as 50MB)
   echo "Generating USB image..."
@@ -49,13 +43,13 @@ function generate_usb_image {
   sudo parted /dev/loop1 --script -- mklabel msdos
   sudo parted /dev/loop1 --script -- mkpart primary fat32 1MiB 100%
   sudo mkfs.vfat -F 32 -n COBALT /dev/loop1p1
-  # Create boot record with ms-sys
-  sudo "$DIR/ms-sys/bin/ms-sys" -w -f /dev/loop1
-  sudo "$DIR/ms-sys/bin/ms-sys" --fat32free /dev/loop1p1
-  sudo "$DIR/ms-sys/bin/ms-sys" -p /dev/loop1p1
   # Mount the partition
   sudo mkdir -p "$DIR/tmpmount"
   sudo mount -t vfat -o umask=0 /dev/loop1p1 "$DIR/tmpmount"
+  # Install bootloader
+  sudo grub-install /dev/loop1 --force --removable --no-floppy --target=i386-pc --boot-directory="$DIR/tmpmount"
+  cd "$DIR/grub"
+  cp -r * "$DIR/tmpmount/grub"
   # Write files
   cd "$DIR/cdroot/"
   cp -r * "$DIR/tmpmount"
@@ -76,12 +70,6 @@ cd "$DIR"
 sudo echo "Sudo access granted."
 
 mkdir -p "$DIR/dist"
-
-# Download and compile ms-sys if needed
-if ! [ -d "$DIR/ms-sys/bin" ]; then
-  echo "MS-SYS is not available, downloading now..."
-  get_ms_sys
-fi
 
 # Download FreeDOS packages
 

@@ -1,7 +1,7 @@
 dist/*
 tmp/*
 tmpmount/*
-ms-sys/*
+grub4dos/*
 cdroot/source.zip
 sysroot/system/BIN/*
 sysroot/system/bin/*
