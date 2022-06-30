@@ -7,12 +7,18 @@ The compile script for Cobalt requires a Bash-compatible shell. You also need th
 - `mkisofs`, for generating the ISO disc image.
 - `zip` and `unzip`, for unzipping FreeDOS packages and zipping up installation files.
 - `git`, for downloading ms-sys.
-- `make` and `gettext`, for compiling ms-sys.
+- `make`, `gcc`, and `gettext`, for compiling [ms-sys](https://github.com/pbatard/ms-sys).
 
 If you're on a Debian-based Linux distribution, this command will install all prerequisites:
 
 ```
 sudo apt install -y mkisofs zip unzip git make gettext
+```
+
+If you don't want to install `make`, `gcc`, and other compile tools, you can install a compiled version of ms-sys from the Snap Store:
+
+```
+sudo snap install ms-sys --edge
 ```
 
 ## Building a Cobalt install CD/USB

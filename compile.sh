@@ -84,14 +84,13 @@ if ! [ -d "$DIR/ms-sys/bin" ]; then
 fi
 
 # Download FreeDOS packages
-# This is disabled for now, add a '!' after 'if' to test
 
 if [ "$PARAM" == "--force-rebuild" ]; then
   get_dependencies
 elif ! [ -d "$DIR/tmp" ]; then
   get_dependencies
 else
-  echo "Dependencies already downloaded, skipping..."
+  echo "FreeDOS packages already downloaded, skipping..."
 fi
 
 # Save build date to CD
