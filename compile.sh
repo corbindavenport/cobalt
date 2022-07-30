@@ -46,27 +46,22 @@ function get_ms_sys {
 function generate_usb_image {
   # TODO: Check if there is already /dev/loop1, and set size based on size of files (with min as 50MB)
   echo "Generating USB image..."
-  rm -rf "$DIR/tmpmount"
   rm -f "$DIR/dist/cobalt-usb.img"
+  # Create blank disk image
   dd if=/dev/zero of="$DIR/dist/cobalt-usb.img" iflag=fullblock bs=1M count=50 && sync
-  sudo losetup loop1 "$DIR/dist/cobalt-usb.img"
-  sudo parted /dev/loop1 --script -- mklabel msdos
-  sudo parted /dev/loop1 --script -- mkpart primary fat32 1MiB 100%
-  sudo mkfs.vfat -F 32 -n COBALT /dev/loop1p1
-  # Create boot record with ms-sys
-  sudo "$DIR/ms-sys/bin/ms-sys" -w -f /dev/loop1
-  sudo "$DIR/ms-sys/bin/ms-sys" --fat32free /dev/loop1p1
-  sudo "$DIR/ms-sys/bin/ms-sys" -p /dev/loop1p1
-  # Mount the partition
+  # Format the disk image
+  mkfs.vfat -F 32 -n COBALT "$DIR/dist/cobalt-usb.img"
+  # Write MBR and FAT32 partition record
+  "$DIR/ms-sys/bin/ms-sys" --fat32free -f "$DIR/dist/cobalt-usb.img"
+  # Mount disk image
   sudo mkdir -p "$DIR/tmpmount"
-  sudo mount -t vfat -o umask=0 /dev/loop1p1 "$DIR/tmpmount"
+  sudo mount -o loop "$DIR/dist/cobalt-usb.img" "$DIR/tmpmount"
   # Write files
-  cd "$DIR/cdroot/"
-  cp -r * "$DIR/tmpmount"
-  # Unmount partition and loopback device
+  cd "$DIR/usbinstallroot"
+  sudo cp -r * "$DIR/tmpmount"
+  # Unmount disk image
   sudo umount "$DIR/tmpmount"
   rm -rf "$DIR/tmpmount"
-  sudo losetup -d /dev/loop1
 }
 
 cd "$DIR"

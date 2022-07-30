@@ -1,7 +1,7 @@
 dist/*
 tmp/*
 tmpmount/*
-ms-sys/*
 cdroot/source.zip
 sysroot/system/BIN/*
 sysroot/system/bin/*
+ms-sys
