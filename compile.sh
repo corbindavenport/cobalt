@@ -1,4 +1,8 @@
 #!/bin/bash
+DIR="$(pwd "${BASH_SOURCE[0]}")"
+PUBLISHER="Cobalt"
+TITLE="Cobalt Live CD"
+PARAM=$1
 
 function get_dependencies {
   # Delete tmp folder if already present
@@ -65,11 +69,6 @@ function generate_usb_image {
   sudo losetup -d /dev/loop1
 }
 
-DIR="$(pwd "${BASH_SOURCE[0]}")"
-PUBLISHER="Cobalt"
-TITLE="Cobalt Live CD"
-PARAM=$1
-
 cd "$DIR"
 
 # Check for sudo
@@ -78,7 +77,11 @@ sudo echo "Sudo access granted."
 mkdir -p "$DIR/dist"
 
 # Download and compile ms-sys if needed
-if ! [ -d "$DIR/ms-sys/bin" ]; then
+if [ -x "$(command -v ms-sys)" ]; then
+  echo "MS-SYS is installed."
+elif [ -d "$DIR/ms-sys/bin" ]; then
+  echo "MS-SYS is available."
+else
   echo "MS-SYS is not available, downloading now..."
   get_ms_sys
 fi
