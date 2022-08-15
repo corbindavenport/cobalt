@@ -37,30 +37,31 @@ function get_dependencies {
   fi
 }
 
-function get_ms_sys {
-  git clone https://github.com/pbatard/ms-sys.git "$DIR/ms-sys"
-  cd "$DIR/ms-sys"
-  make
-}
-
 function generate_usb_image {
   # TODO: Check if there is already /dev/loop1, and set size based on size of files (with min as 50MB)
   echo "Generating USB image..."
   rm -f "$DIR/dist/cobalt-usb.img"
   # Create blank disk image
   dd if=/dev/zero of="$DIR/dist/cobalt-usb.img" iflag=fullblock bs=1M count=50 && sync
-  # Format the disk image
-  mkfs.vfat -F 32 -n COBALT "$DIR/dist/cobalt-usb.img"
-  # Write MBR and FAT32 partition record
-  "$DIR/ms-sys/bin/ms-sys" --fat32free -f "$DIR/dist/cobalt-usb.img"
+  # Boot QEMU
+  echo "Initializing USB image..."
+  qemu-system-i386 -m 32 -k en-us -rtc base=localtime -soundhw sb16,adlib -device cirrus-vga -nographic -hda "$DIR/dist/cobalt-usb.img" -fda "$DIR/diskformat/boot1.img" -boot a &> /dev/null
+  echo "Creating system on USB image..."
+  qemu-system-i386 -m 32 -k en-us -rtc base=localtime -soundhw sb16,adlib -device cirrus-vga -nographic -hda "$DIR/dist/cobalt-usb.img" -fda "$DIR/diskformat/boot2.img" -boot a &> /dev/null
   # Mount disk image
+  echo "Mounting image..."
   sudo mkdir -p "$DIR/tmpmount"
-  sudo mount -o loop "$DIR/dist/cobalt-usb.img" "$DIR/tmpmount"
+  sudo kpartx -a -v "$DIR/dist/cobalt-usb.img"
+  sudo mount /dev/mapper/loop0p1 "$DIR/tmpmount"
   # Write files
+  echo "Copying files to image..."
   cd "$DIR/usbinstallroot"
   sudo cp -r * "$DIR/tmpmount"
   # Unmount disk image
+  echo "Unmounting image..."
   sudo umount "$DIR/tmpmount"
+  sudo kpartx -d -v "$DIR/dist/cobalt-usb.img"
+  sudo losetup -d /dev/loop0
   rm -rf "$DIR/tmpmount"
 }
 
@@ -70,16 +71,6 @@ cd "$DIR"
 sudo echo "Sudo access granted."
 
 mkdir -p "$DIR/dist"
-
-# Download and compile ms-sys if needed
-if [ -x "$(command -v ms-sys)" ]; then
-  echo "MS-SYS is installed."
-elif [ -d "$DIR/ms-sys/bin" ]; then
-  echo "MS-SYS is available."
-else
-  echo "MS-SYS is not available, downloading now..."
-  get_ms_sys
-fi
 
 # Download FreeDOS packages
 
