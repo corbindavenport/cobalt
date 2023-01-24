@@ -1,5 +1,5 @@
 switches=/f /n
-devicehigh=C:\system\bin\jemmex.exe
+device=C:\system\bin\jemmex.exe NOINVLPG
 devicehigh=C:\system\bin\udvd2.sys /d:cd /c
 dos=high,umb
 files=20

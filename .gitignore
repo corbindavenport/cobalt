@@ -1,7 +1,9 @@
+.DS_Store
 dist/*
 tmp/*
 tmpmount/*
 cdroot/source.zip
 sysroot/system/BIN/*
 sysroot/system/bin/*
-ms-sys
+sysroot/system/GUI/*
+sysroot/system/gui/*

@@ -2,7 +2,7 @@
 
 ## Installing prerequisites
 
-The compile script for Cobalt requires a Bash-compatible shell. You also need the below packages installed or the script will fail.
+The compile script for Cobalt requires a Bash-compatible shell, and has been tested to work on both the Windows Subsystem for Linux (with Ubuntu) and macOS 13 Ventura. You need the below packages installed or the script will fail.
 
 - `mkisofs`, for generating the ISO disc image.
 - `zip` and `unzip`, for unzipping FreeDOS packages and zipping up installation files.

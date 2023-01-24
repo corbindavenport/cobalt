@@ -21,7 +21,7 @@ function get_dependencies {
     echo "Downloading package: $p"
     curl --progress-bar -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36 Edg/98.0.1108.43" --max-time 15 -o "$DIR/tmp/${PACKAGE[1]}.zip" "https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/latest/$p.zip"
     # Create single BIN folder from all zip files
-    unzip -o "$DIR/tmp/${PACKAGE[1]}.zip" "BIN/*" "bin/*" "APPS/*" "apps/*" -x "*/_*" "*/*.HLP" -d "$DIR/tmp/"
+    unzip -o "$DIR/tmp/${PACKAGE[1]}.zip" "BIN/*" "bin/*" "APPS/*" "apps/*" "GUI/*" "gui/*" -x "*/_*" "*/*.HLP" -d "$DIR/tmp/"
     # Create source folder
     unzip -o "$DIR/tmp/${PACKAGE[1]}.zip" "SOURCE/*" "source/*" -x "*/_*" -d "$DIR/tmp/"
   done < "$DIR/packages.txt"
@@ -34,6 +34,11 @@ function get_dependencies {
   cp -f -r tmp/BIN/* sysroot/system/bin
   if [ -d "$DIR/tmp/APPS" ]; then
     cp -f -r tmp/APPS/* sysroot/system/bin
+  fi
+  # Move GUI package to system folder if it exists
+  if [ -d "$DIR/tmp/OPENGEM" ]; then
+    mkdir -p "$DIR/sysroot/system/gui"
+    cp -f -r tmp/GUI/* sysroot/system/gui
   fi
 }
 

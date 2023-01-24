@@ -26,5 +26,6 @@ base/unformat
 base/xcopy
 base/kernel
 base/edit
+base/swsubst
 drivers/udvd2
-apps/dn2
+gui/opengem
