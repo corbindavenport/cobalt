@@ -2,31 +2,29 @@
 
 ## Installing prerequisites
 
-The compile script for Cobalt requires a Bash-compatible shell. You also need the following packages installed or the script will fail:
+The compile script for Cobalt requires a Bash-compatible shell. You also need the below packages installed or the script will fail.
 
 - `mkisofs`, for generating the ISO disc image.
 - `zip` and `unzip`, for unzipping FreeDOS packages and zipping up installation files.
-- `git`, for downloading ms-sys.
-- `make`, `gcc`, and `gettext`, for compiling [ms-sys](https://github.com/pbatard/ms-sys).
 
 If you're on a Debian-based Linux distribution, this command will install all prerequisites:
 
 ```
-sudo apt install -y mkisofs zip unzip git make gettext
+sudo apt install -y mkisofs zip unzip
 ```
 
-If you don't want to install `make`, `gcc`, and other compile tools, you can install a compiled version of ms-sys from the Snap Store:
+On macOS, you probably only need `mkisofs` which can be installed with [Brew](https://brew.sh/):
 
 ```
-sudo snap install ms-sys --edge
+brew install cdrtools
 ```
 
-## Building a Cobalt install CD/USB
+## Building a Cobalt install CD
 
-Clone the repository, then run the below command in the root directory. Sudo access is required for temporarily mounting file systems (when a USB image is generated).
+Clone the repository, then run the below command in the root directory:
 
 ```
-sudo ./compile.sh
+./compile.sh
 ```
 
 This will generate a bootable ISO image at `dist/cobalt.iso`. This can be written to a physical CD/USB or used with a virtual machine.

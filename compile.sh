@@ -37,49 +37,9 @@ function get_dependencies {
   fi
 }
 
-function get_ms_sys {
-  git clone https://github.com/pbatard/ms-sys.git "$DIR/ms-sys"
-  cd "$DIR/ms-sys"
-  make
-}
-
-function generate_usb_image {
-  # TODO: Check if there is already /dev/loop1, and set size based on size of files (with min as 50MB)
-  echo "Generating USB image..."
-  rm -f "$DIR/dist/cobalt-usb.img"
-  # Create blank disk image
-  dd if=/dev/zero of="$DIR/dist/cobalt-usb.img" iflag=fullblock bs=1M count=50 && sync
-  # Format the disk image
-  mkfs.vfat -F 32 -n COBALT "$DIR/dist/cobalt-usb.img"
-  # Write MBR and FAT32 partition record
-  "$DIR/ms-sys/bin/ms-sys" --fat32free -f "$DIR/dist/cobalt-usb.img"
-  # Mount disk image
-  sudo mkdir -p "$DIR/tmpmount"
-  sudo mount -o loop "$DIR/dist/cobalt-usb.img" "$DIR/tmpmount"
-  # Write files
-  cd "$DIR/usbinstallroot"
-  sudo cp -r * "$DIR/tmpmount"
-  # Unmount disk image
-  sudo umount "$DIR/tmpmount"
-  rm -rf "$DIR/tmpmount"
-}
-
 cd "$DIR"
 
-# Check for sudo
-sudo echo "Sudo access granted."
-
 mkdir -p "$DIR/dist"
-
-# Download and compile ms-sys if needed
-if [ -x "$(command -v ms-sys)" ]; then
-  echo "MS-SYS is installed."
-elif [ -d "$DIR/ms-sys/bin" ]; then
-  echo "MS-SYS is available."
-else
-  echo "MS-SYS is not available, downloading now..."
-  get_ms_sys
-fi
 
 # Download FreeDOS packages
 
@@ -103,18 +63,13 @@ cd "$DIR/sysroot"
 zip -r "$DIR/cdroot/system.zip" * -x *.md
 cd "$DIR"
 
-# Create folder where ISO and USB image will be stored
+# Create folder where ISO image will be stored
 mkdir -p "$DIR/dist"
 
 # Generate ISO
 
 echo "Generating ISO..."
 mkisofs -o "$DIR/dist/cobalt.iso" -publisher "$PUBLISHER" -V "$TITLE" -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -c boot.cat cdroot
-
-# Generate USB image
-generate_usb_image
-
-# Mount USB image and copy files
 
 # Clean up
 rm "$DIR/cdroot/date.txt"

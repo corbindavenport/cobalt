@@ -16,7 +16,7 @@ jobs:
       - name: Get dependencies
         run: |
           sudo apt-get update
-          sudo apt install -y mkisofs zip unzip git make gettext
+          sudo apt install -y mkisofs zip unzip
       # Build Cobalt
       - name: Build ISO
         run: ./compile.sh
